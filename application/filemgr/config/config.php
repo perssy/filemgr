@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/CI221/phpmgr.php/';
+$config['base_url']	= 'http://localhost/filemgr/index.php/';
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ $config['base_url']	= 'http://localhost/CI221/phpmgr.php/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'phpmgr.php';
+$config['index_page'] = 'index.php';
 
 /*
 |--------------------------------------------------------------------------
