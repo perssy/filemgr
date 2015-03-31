@@ -54,8 +54,10 @@ class Index extends CI_Controller {
 			}
 			//$this->path_info = pathinfo( $this->curr_dir );
 			$this->raw_path = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->curr_dir;
-			
-			$this->raw_path = my_find_path( $this->raw_path );
+			if( $this->config->item( 'find_method' , 'filemgr' ) == 3 )
+			{
+				$this->raw_path = my_find_path( $this->raw_path );
+			}
 			
 			$this->path_info = pathinfo( $this->raw_path );
 			

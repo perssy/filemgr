@@ -34,7 +34,7 @@ class Del extends CI_Controller {
 				if (  $find_method == 1 )
 				{
 					//$this->post_data = my_find_path( $this->post_data , APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' );
-
+					
 					$this->path_info = pathinfo( $this->post_data );
 					
 					//$this->post_data = $this->path_info['dirname'] . urlencode( $this->path_info['basename'] );
