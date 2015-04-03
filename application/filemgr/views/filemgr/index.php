@@ -33,8 +33,6 @@ function modify(recid , type)
 			success : function(data){
 				switch(type)
 				{
-					case 'del':
-						break;
 					case 'edit':
 						break;
 					case 'add':
@@ -88,29 +86,6 @@ function modify(recid , type)
 }
 
 $( '#grid' ).w2grid(<?php echo $grid_src;?>);
-w2ui.grid.toolbar.on( 'click' , function(event) {
-	console.log(event.target);
-	event.preventDefault();
-	var selected = w2ui.grid.getSelection();
-	var length = selected.length;
-	if ( length != 1 )
-	{
-		return;
-	}
-	switch(event.target)
-	{
-		case 'exebtn' : 
-			modify( selected[0] , 'exec' );
-			break;
-	}
-});
-w2ui.grid.on( 'add' , function(event) {
-	
-});
-
-w2ui.grid.on( 'edit' , function(event) {
-	w2alert($(this).attr('class'));
-});
 
 w2ui.grid.on( 'delete' , function(event) {
 	if( event.force == true ){
@@ -127,16 +102,32 @@ w2ui.grid.on( 'delete' , function(event) {
 		}
 	}
 });
+w2ui.grid.toolbar.on( 'click' , function(event) {
+	//console.log(event.target);
+	event.preventDefault();
+	var selected = w2ui.grid.getSelection();
+	var length = selected.length;
+	if ( length != 1 )
+	{
+		return;
+	}
+	switch(event.target)
+	{
+		case 'exebtn' : 
+			modify( selected[0] , 'exec' );
+			break;
+		case 'parentbtn' :
+			//window.location.href = "<?php echo $this->config->item( ' base_url' );?>";
+			$( '#parentlink' ).trigger( 'click' );
+			break;
+	}
+});
+
 
 $( '.dir' ).click(function(e){
 	var url = '<?php echo $this->config->item( 'base_url' );?>index.php/filemgr/index/explore/<?php echo $curr_dir;?>'+$(this).html();
 	window.location.href = url;
 	//window.location.replace(url);
-});
-
-$( '#tb_grid_toolbar_item_parentbtn' ).click(function(e){
-	//window.location.href = "<?php echo $this->config->item( ' base_url' );?>";
-	$( '#parentlink' ).trigger( 'click' );
 });
 </script>
 

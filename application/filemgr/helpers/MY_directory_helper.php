@@ -11,7 +11,7 @@ $returnall : true for returning result including base path , false for not
 */
 function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlencode = 0 , $returnall = false)
 {
-	$logflag = true;
+	$logflag = false;
 	
 	if ( !is_array( $encodings ) || empty( $encodings ))
 	{

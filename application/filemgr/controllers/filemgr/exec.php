@@ -58,6 +58,7 @@ class Exec extends CI_Controller {
 				{
 					$this->file_path_encoded = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->post_data;
 				}
+				
 				if( ! is_dir( $this->file_path_encoded ) )
 				{
 					if( file_exists( $this->file_path_encoded ) )
@@ -78,31 +79,12 @@ class Exec extends CI_Controller {
 				}
 				else
 				{
-					$this->file_list = scandir( $this->file_path_encoded );
-					if ( version_compare( phpversion() , '5.4.0' , '>=' ) )
-					{
-						$this->file_list = array_diff( $this->file_list , [ '.' , '..' ] );
-					}
-					else
-					{
-						$this->file_list = array_diff( $this->file_list , array( '.' , '..' ) );
-					}
-					//if ( count( $this->file_list )  <= 2 && $this->file_list[0] == '.'  && $this->file_list[1] == '..' )
-					if ( empty( $this->file_list ) )
-					{
-						/*rmdir( $this->file_path );
-						$this->ret_arr = array( 'msg' => 'Delete successfully!' , 'code' => 200 );*/
-						$this->ret_arr = array( 'msg' => 'Folders cannot be deleted!' , 'code' => 500 );
-					}
-					else
-					{
-						$this->ret_arr = array( 'msg' => 'Folder is not empty!' , 'code' => 500 );
-					}
+					$this->ret_arr = array( 'msg' => 'Folder cannot be executed!' , 'code' => 500 );
 				}
 			}
 			else
 			{
-				$this->ret_arr = array( 'msg' => 'Parent folder cannot be deleted!' , 'code' => 500 );
+				$this->ret_arr = array( 'msg' => 'Parent folder cannot be executed!' , 'code' => 500 );
 			}
 		}
 		else
