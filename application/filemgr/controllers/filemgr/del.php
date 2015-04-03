@@ -16,7 +16,7 @@ class Del extends CI_Controller {
 		parent::__construct();
 		//$this->load->helper( 'file' );
 		$this->post_data = addslashes( trim( file_get_contents( 'php://input' ) ) );
-		if ( $this->post_data == '' )
+		if ( $this->post_data === '' )
 		{
 			exit;
 		}
@@ -26,12 +26,12 @@ class Del extends CI_Controller {
 	
 	public function index()//cannot deal with filename containing utf-8 characters
 	{
-		if ( $this->post_data != '' )
+		if ( $this->post_data !== '' )
 		{
-			if ( $this->post_data != '..' && substr( $this->post_data , -2 ) != '..' )
+			if ( $this->post_data !== '..' && substr( $this->post_data , -2 ) !== '..' )
 			{
 				$find_method = $this->config->item( 'find_method' , 'filemgr' );
-				if (  $find_method == 1 )
+				if (  $find_method === 1 )
 				{
 					//$this->post_data = my_find_path( $this->post_data , APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' );
 					
@@ -47,12 +47,12 @@ class Del extends CI_Controller {
 					
 					foreach ( $this->file_list as $val )//find corrsponding file name
 					{
-						if ( $val == '.' || $val == '..' )
+						if ( $val === '.' || $val === '..' )
 						{
 							continue;
 						}
 						
-						if ( $this->path_info['basename'] == mb_convert_encoding( $val , 'UTF-8' , mb_detect_encoding( $val , $this->encodings ) ) )
+						if ( $this->path_info['basename'] === mb_convert_encoding( $val , 'UTF-8' , mb_detect_encoding( $val , $this->encodings ) ) )
 						{//matched
 							$this->file_path_encoded = mb_convert_encoding( $this->file_path_folder , mb_detect_encoding( $val , $this->encodings ) , 'UTF-8' ) . $val ;
 							//unlink(mb_convert_encoding($this->file_path,mb_detect_encoding($val,$this->encodings),'utf-8').$val);
@@ -60,7 +60,7 @@ class Del extends CI_Controller {
 						}
 					}
 				}
-				else if ( $find_method == 3 )
+				else if ( $find_method === 3 )
 				{
 					$this->post_data = my_find_path( $this->post_data , APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' );
 					
@@ -113,7 +113,7 @@ class Del extends CI_Controller {
 					}
 					else
 					{
-						$this->ret_arr = array( 'msg' => 'Folders cannot be deleted!' , 'code' => 500 );
+						$this->ret_arr = array( 'msg' => 'Folder is not empty!' , 'code' => 500 );
 					}
 				}
 			}

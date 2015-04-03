@@ -11,7 +11,7 @@ $returnall : true for returning result including base path , false for not
 */
 function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlencode = 0 , $returnall = false)
 {
-	$log = false;
+	$logflag = true;
 	
 	if ( !is_array( $encodings ) || empty( $encodings ))
 	{
@@ -20,8 +20,8 @@ function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlenc
 
 	$path = addslashes( str_replace( "\\" , '/' , $path ) );
 	
-	$log && file_put_contents( 'findpath.log' , "\n path 1:" , FILE_APPEND );
-	$log && file_put_contents( 'findpath.log' , print_r( $path , true ) , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , "\n path 1:" , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , print_r( $path , true ) , FILE_APPEND );
 	
 	if ( $urlencode === 1 )
 	{
@@ -32,13 +32,13 @@ function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlenc
 		$path = urldecode( $path );
 	}
 
-	$log && file_put_contents( 'findpath.log' , "\n path 2:" , FILE_APPEND );
-	$log && file_put_contents( 'findpath.log' , print_r( $path , true ) , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , "\n path 2:" , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , print_r( $path , true ) , FILE_APPEND );
 	
 	$full_path = $base_path . '/' . $path;
 
-	$log && file_put_contents( 'findpath.log' , "\n full path 1:" , FILE_APPEND );
-	$log && file_put_contents( 'findpath.log' , print_r( $full_path , true ) , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , "\n full path 1:" , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , print_r( $full_path , true ) , FILE_APPEND );
 	
 	if ( is_dir( $full_path ) || is_file( $full_path ) )
 	{
@@ -47,8 +47,8 @@ function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlenc
 	
 	$path_arr = explode( '/' , $path );
 	
-	$log && file_put_contents( 'findpath.log' , "\n path arr 1:" , FILE_APPEND );
-	$log && file_put_contents( 'findpath.log' , print_r( $path_arr , true ) , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , "\n path arr 1:" , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , print_r( $path_arr , true ) , FILE_APPEND );
 	
 	$dept = count( $path_arr );
 	
@@ -58,8 +58,8 @@ function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlenc
 	
 	array_unshift( $path_arr , $base_path );
 	
-	$log && file_put_contents( 'findpath.log' , "\n path arr 2:" , FILE_APPEND );
-	$log && file_put_contents( 'findpath.log' , print_r( $path_arr , true ) , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , "\n path arr 2:" , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , print_r( $path_arr , true ) , FILE_APPEND );
 	
 	$find_path = $base_path;
 	$real_path = '';
@@ -68,39 +68,39 @@ function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlenc
 	
 	for ( ; $i < $dept ; $i++)
 	{
-		$log && file_put_contents( 'findpath.log' , "\n outer loop a new turn:" , FILE_APPEND );
+		$logflag && file_put_contents( 'findpath.log' , "\n outer loop a new turn:" , FILE_APPEND );
 		
 		$temp_path = mb_convert_encoding( $find_path , $oldencode , 'UTF-8' );
 
-		$log && file_put_contents( 'findpath.log' , "\n old encode:" , FILE_APPEND );
-		$log && file_put_contents( 'findpath.log' , print_r( $oldencode , true ) , FILE_APPEND );
+		$logflag && file_put_contents( 'findpath.log' , "\n old encode:" , FILE_APPEND );
+		$logflag && file_put_contents( 'findpath.log' , print_r( $oldencode , true ) , FILE_APPEND );
 	
-		$log && file_put_contents( 'findpath.log' , "\n temp path:" , FILE_APPEND );
-		$log && file_put_contents( 'findpath.log' , print_r( $temp_path , true ) , FILE_APPEND );
+		$logflag && file_put_contents( 'findpath.log' , "\n temp path:" , FILE_APPEND );
+		$logflag && file_put_contents( 'findpath.log' , print_r( $temp_path , true ) , FILE_APPEND );
 		
 		$file_list = scandir( $temp_path );
 
-		$log && file_put_contents( 'findpath.log' , "\n file list:" , FILE_APPEND );
-		$log && file_put_contents( 'findpath.log' , print_r( $file_list , true ) , FILE_APPEND );
+		$logflag && file_put_contents( 'findpath.log' , "\n file list:" , FILE_APPEND );
+		$logflag && file_put_contents( 'findpath.log' , print_r( $file_list , true ) , FILE_APPEND );
 	
 		$target = $path_arr[$i+1];
 
 		foreach ( $file_list as $val )
 		{
-			$log && file_put_contents( 'findpath.log' , "\n inner loop:" , FILE_APPEND );
-			$log && file_put_contents( 'findpath.log' , print_r( $val , true ) , FILE_APPEND );
+			$logflag && file_put_contents( 'findpath.log' , "\n inner loop:" , FILE_APPEND );
+			$logflag && file_put_contents( 'findpath.log' , print_r( $val , true ) , FILE_APPEND );
 			
-			if ( $val == '.' || $val == '..' )
+			if ( $val === '.' || $val === '..' )
 			{
 				continue;
 			}
 			
 			$encode = mb_detect_encoding( $val , $encodings );
 
-			$log && file_put_contents( 'findpath.log' , "\n encode:" , FILE_APPEND );
-			$log && file_put_contents( 'findpath.log' , print_r( $encode , true ) , FILE_APPEND );
+			$logflag && file_put_contents( 'findpath.log' , "\n encode:" , FILE_APPEND );
+			$logflag && file_put_contents( 'findpath.log' , print_r( $encode , true ) , FILE_APPEND );
 	
-			if ( $encode != 'UTF-8' )
+			if ( strtoupper( $encode ) !== 'UTF-8' )
 			{
 				$encoded = mb_convert_encoding( $val , 'UTF-8' , $encode );
 				$oldencode = $encode;
@@ -110,30 +110,30 @@ function my_find_path( $path , $base_path = '.' , $encodings = array() , $urlenc
 				$encoded = $val;
 			}
 
-			$log && file_put_contents( 'findpath.log' , "\n encoded:" , FILE_APPEND );
-			$log && file_put_contents( 'findpath.log' , print_r( $encoded , true ) , FILE_APPEND );
+			$logflag && file_put_contents( 'findpath.log' , "\n encoded:" , FILE_APPEND );
+			$logflag && file_put_contents( 'findpath.log' , print_r( $encoded , true ) , FILE_APPEND );
 			
-			if ( $encoded == $target )
+			if ( $encoded === $target )
 			{
 				//$real_path_arr[$i] = $val;
 				$find_path .= '/' . $encoded;
-				if ( $real_path != '' )
+				if ( $real_path !== '' )
 				{
 					$real_path .= '/';
 				}
 				$real_path .= $val;
 				
-				$log && file_put_contents( 'findpath.log' , "\n find path:" , FILE_APPEND );
-				$log && file_put_contents( 'findpath.log' , print_r( $find_path , true ) , FILE_APPEND );
-				$log && file_put_contents( 'findpath.log' , "\n real path:" , FILE_APPEND );
-				$log && file_put_contents( 'findpath.log' , print_r( $real_path , true ) , FILE_APPEND );
+				$logflag && file_put_contents( 'findpath.log' , "\n find path:" , FILE_APPEND );
+				$logflag && file_put_contents( 'findpath.log' , print_r( $find_path , true ) , FILE_APPEND );
+				$logflag && file_put_contents( 'findpath.log' , "\n real path:" , FILE_APPEND );
+				$logflag && file_put_contents( 'findpath.log' , print_r( $real_path , true ) , FILE_APPEND );
 				
 				break;
 			}
 		}
 	}
-	$log && file_put_contents( 'findpath.log' , "\n result:" , FILE_APPEND );
-	$log && file_put_contents( 'findpath.log' , print_r( $real_path , true ) , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , "\n result:" , FILE_APPEND );
+	$logflag && file_put_contents( 'findpath.log' , print_r( $real_path , true ) , FILE_APPEND );
 	
 	if ( $returnall )
 	{

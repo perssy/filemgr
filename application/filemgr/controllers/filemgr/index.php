@@ -44,17 +44,17 @@ class Index extends CI_Controller {
 	public function explore()
 	{
 		/*validate php files dir*/
-		if ( $this->config->item( 'php_dir' , 'filemgr' ) != '' && is_dir( APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) ) )
+		if ( $this->config->item( 'php_dir' , 'filemgr' ) !== '' && is_dir( APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) ) )
 		{
 			$this->curr_dir = urldecode( implode( '/' , func_get_args() ) );
 			
-			if ( $this->curr_dir != '' )
+			if ( $this->curr_dir !== '' )
 			{
 				$this->curr_dir .= '/';
 			}
 			//$this->path_info = pathinfo( $this->curr_dir );
 			$this->raw_path = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->curr_dir;
-			if( $this->config->item( 'find_method' , 'filemgr' ) == 3 )
+			if( $this->config->item( 'find_method' , 'filemgr' ) === 3 )
 			{
 				$this->raw_path = my_find_path( $this->raw_path );
 			}
@@ -65,7 +65,7 @@ class Index extends CI_Controller {
 			
 			foreach ( $this->file_list as $val )
 			{
-				if ( $this->path_info['basename'] == mb_convert_encoding( $val , 'UTF-8' , mb_detect_encoding( $val , $this->encodings ) ) )
+				if ( $this->path_info['basename'] === mb_convert_encoding( $val , 'UTF-8' , mb_detect_encoding( $val , $this->encodings ) ) )
 				{//matched
 					$this->real_path = mb_convert_encoding( $this->raw_path , mb_detect_encoding( $val , $this->encodings ) , 'UTF-8' );
 					break;
@@ -74,7 +74,7 @@ class Index extends CI_Controller {
 
 			$this->file_list = array();
 			//unset( $this->file_list );
-			if ( $this->real_path == '' )
+			if ( $this->real_path === '' )
 			{
 				$this->real_path = $this->raw_path;
 			}
@@ -98,7 +98,7 @@ class Index extends CI_Controller {
 	
 		foreach ( $this->all_list as $val )
 		{
-			if ( $val == '' || $val == '.' || $val == '..' )
+			if ( $val === '' || $val === '.' || $val === '..' )
 			{
 				continue;
 			}
@@ -137,7 +137,7 @@ class Index extends CI_Controller {
 			}
 		}
 		
-		if ( $this->curr_dir != '' )//parent folder
+		if ( $this->curr_dir !== '' )//parent folder
 		{
 			$this->records[] = array(
 				'recid' => '',
@@ -211,8 +211,8 @@ class Index extends CI_Controller {
 			$this->records[] = array(
 				'recid' => $this->recid,
 				'filename' => '<span class="dir">' . $dirname . '</span>',
-				//'filename' => "<span class='dir'><img src='{$this->config->item( 'base_url' )}resource/png/images/folder'>{$key}</span>",
-				//'filename' => "<span class='dir'><a href='{$this->config->item( 'base_url' )}filemgr/index/dir/{$key}'>{$key}</a></span>",
+				//'filename' => "<span class='dir'><img src='{$this->config->item( 'base_url' )}index.php/resource/png/images/folder'>{$key}</span>",
+				//'filename' => "<span class='dir'><a href='{$this->config->item( 'base_url' )}index.php/filemgr/index/dir/{$key}'>{$key}</a></span>",
 				'size' => '',
 				'type' => 'Dir',
 				'modifytime' => '',
@@ -238,7 +238,7 @@ class Index extends CI_Controller {
 			$this->records[] = array(
 				'recid' => $this->recid,
 				'filename' => '<span class="file">' . $filename . '</span>',
-				//'filename' => "<span class='file'><img src='{$this->config->item( 'base_url' )}resource/png/images/fileicon'>{$key}</span>",
+				//'filename' => "<span class='file'><img src='{$this->config->item( 'base_url' )}index.php/resource/png/images/fileicon'>{$key}</span>",
 				'size' => $val['size'],
 				'type' => 'File',
 				'modifytime' => gmdate( 'Y-m-d H:i:s' , $val['modifytime'] ),
