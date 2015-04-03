@@ -3,18 +3,18 @@ if ( ! defined( 'BASEPATH' ) ) exit( 'No direct script access allowed' );
 
 class Exec extends CI_Controller {
 	
-	private $encodings = array( 'UTF-8' , 'GBK' , 'ASCII' , 'CP936' );
 	public function __construct()
 	{
 		parent::__construct();
 		
 		$this->post_data = addslashes( trim( file_get_contents( 'php://input' ) ) );
+		
 		if ( $this->post_data === '' )
 		{
 			exit;
 		}
+		
 		$this->config->load( 'filemgr' , true );
-		$this->load->helper( 'directory' );
 	}
 	
 	public function Index()
@@ -23,50 +23,21 @@ class Exec extends CI_Controller {
 		{
 			if ( $this->post_data !== '..' && substr( $this->post_data , -2 ) !== '..' )
 			{
-				$find_method = $this->config->item( 'find_method' , 'filemgr' );
+				$this->file_path = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->post_data;
 				
-				if ( $find_method === 3 )
+				if ( $this->config->item( 'convert_path' , 'filemgr' ) === true )
 				{
-					$this->post_data = my_find_path( $this->post_data , APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' );
-					
-					$this->file_path_encoded = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->post_data;
-				}
-				else if (  $find_method === 1 )
-				{
-					$this->path_info = pathinfo( $this->post_data );
-					
-					$this->file_path_folder = $this->path_info['dirname'];
-					
-					$this->file_list = scandir( $this->file_path_folder );
-					
-					foreach ( $this->file_list as $val )//find corrsponding file name
-					{
-						if ( $val === '.' || $val === '..' )
-						{
-							continue;
-						}
-						
-						if ( $this->path_info['basename'] === mb_convert_encoding( $val , 'UTF-8' , mb_detect_encoding( $val , $this->encodings ) ) )
-						{
-							$this->file_path_encoded = mb_convert_encoding( $this->file_path_folder , mb_detect_encoding( $val , $this->encodings ) , 'UTF-8' ) . $val ;
-
-							break;
-						}
-					}
-				}
-				else
-				{
-					$this->file_path_encoded = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->post_data;
+					$this->file_path = mb_convert_encoding( $this->file_path , $this->config->item( 'encode_native' , 'filemgr' ) , $this->config->item( 'encode_web' , 'filemgr' ) );
 				}
 				
-				if( ! is_dir( $this->file_path_encoded ) )
+				if( ! is_dir( $this->file_path ) )
 				{
-					if( file_exists( $this->file_path_encoded ) )
+					if( file_exists( $this->file_path ) )
 					{
 						try{
 							/*unlink( $this->file_path );
 							$this->ret_arr = array( 'msg' => 'Delete successfully!' , 'code' => 200 );*/
-							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'url' => $this->config->item( 'base_url' ) . $this->file_path_encoded);
+							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'url' => $this->config->item( 'base_url' ) . $this->file_path);
 						}catch(Exception $e)
 						{
 							$this->ret_arr = array( 'msg' => $e , 'code' => 500 );

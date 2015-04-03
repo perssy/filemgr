@@ -4,8 +4,6 @@ if ( ! defined( 'BASEPATH' )) exit( 'No direct script access allowed' );
 class Index extends CI_Controller {
 
 	private $curr_dir = '';
-	private $path_info = array();
-	private $raw_path = '';
 	private $real_path = '';
 	private $full_path = '';
 	private $temp_file = '';
@@ -31,14 +29,13 @@ class Index extends CI_Controller {
 		array( 'field' => 'type' , 'caption' => 'FileType' , 'type' => 'text' ),
 	);
 	private $sortData = array( 'field' => 'filename' ,  'direction' => 'ASC' );
-	private $encodings = array( 'UTF-8' , 'GBK' , 'ASCII' , 'CP936' );
 	
 	public function __construct()
 	{
 		parent::__construct();
+		
 		$this->config->load( 'filemgr' , true );
 		$this->load->helper( 'file' );
-		$this->load->helper( 'directory' );
 	}
 	
 	public function explore()
@@ -52,34 +49,15 @@ class Index extends CI_Controller {
 			{
 				$this->curr_dir .= '/';
 			}
-			//$this->path_info = pathinfo( $this->curr_dir );
-			$this->raw_path = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->curr_dir;
-			if( $this->config->item( 'find_method' , 'filemgr' ) === 3 )
+			
+			$this->file_path = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->curr_dir;
+			
+			if ( $this->config->item( 'convert_path' , 'filemgr' ) === true )
 			{
-				$this->raw_path = my_find_path( $this->raw_path );
-			}
-			
-			$this->path_info = pathinfo( $this->raw_path );
-			
-			$this->file_list = scandir( $this->path_info['dirname'] );
-			
-			foreach ( $this->file_list as $val )
-			{
-				if ( $this->path_info['basename'] === mb_convert_encoding( $val , 'UTF-8' , mb_detect_encoding( $val , $this->encodings ) ) )
-				{//matched
-					$this->real_path = mb_convert_encoding( $this->raw_path , mb_detect_encoding( $val , $this->encodings ) , 'UTF-8' );
-					break;
-				}
+				$this->file_path = mb_convert_encoding( $this->file_path  , $this->config->item( 'encode_native' , 'filemgr' ) , $this->config->item( 'encode_web' , 'filemgr' ) );
 			}
 
-			$this->file_list = array();
-			//unset( $this->file_list );
-			if ( $this->real_path === '' )
-			{
-				$this->real_path = $this->raw_path;
-			}
-			//$this->real_path = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->curr_dir;
-			if ( ! is_dir( $this->real_path ) )
+			if ( ! is_dir( $this->file_path ) )
 			{
 				show_error( 'Incorrect directory!' );
 			}
@@ -88,13 +66,9 @@ class Index extends CI_Controller {
 		{
 			show_error( 'Invalid directory config for PHP files!' );
 		}
-		//echo '<pre>';
-		//var_dump(get_dir_file_info($this->real_path));
-		//var_dump(directory_map($this->real_path));
-		//exit;
-		//exit;
+		
 		/*list all files and directories*/
-		$this->all_list = scandir( $this->real_path );
+		$this->all_list = scandir( $this->file_path );
 	
 		foreach ( $this->all_list as $val )
 		{
@@ -105,13 +79,23 @@ class Index extends CI_Controller {
 			
 			//$val = mb_convert_encoding( $val , 'UTF-8' , mb_detect_encoding( $val , $this->encodings ) );
 			
-			$this->full_path = $this->real_path.'/'.$val;
-			if ( is_dir( $this->full_path ) )
+			$this->full_path = $this->file_path.'/'.$val;
+			
+			if ( $this->config->item( 'convert_path' , 'filemgr' ) === true )
+			{
+				$this->temp_file = mb_convert_encoding( $val  , $this->config->item( 'encode_web' , 'filemgr' ) , $this->config->item( 'encode_native' , 'filemgr' ) );
+			}
+			else
+			{
+				$this->temp_file = $val;
+			}
+			
+			if ( is_dir( $this->full_path ) )//dir list
 			{
 				$newdir = array();
-				$this->dir_list[$val] = $newdir;
+				$this->dir_list[$this->temp_file] = $newdir;
 			}
-			else if ( is_file( $this->full_path ) )
+			else if ( is_file( $this->full_path ) )//file list
 			{
 				$newfile = array(
 					//'size' => ((filesize($full_path))/1024).' KB',
@@ -128,16 +112,16 @@ class Index extends CI_Controller {
 					$newfile['size'] = $filesize . ' Byte';
 				}
 				
-				$this->file_list[$val] = $newfile;
+				$this->file_list[$this->temp_file] = $newfile;
 			}
 			else
 			{
 				$newotherfile = array();
-				$this->other_list[$val] = $newotherfile;
+				$this->other_list[$this->temp_file] = $newotherfile;
 			}
 		}
 		
-		if ( $this->curr_dir !== '' )//parent folder
+		if ( $this->curr_dir !== '' )//if current folder has parent folder
 		{
 			$this->records[] = array(
 				'recid' => '',
@@ -193,24 +177,10 @@ class Index extends CI_Controller {
 		}*/
 		foreach ( $this->dir_list as $key => $val )
 		{
-			$convert_type = $this->config->item( 'convert_filename' , 'filemgr' );
-			if ( $convert_type === 1 )
-			{
-				$dirname = utf8_decode( $key );
-			}
-			else if ( $convert_type === 2 )
-			{
-				$dirname = mb_convert_encoding( $key , 'UTF-8' , mb_detect_encoding( $key , $this->encodings ) );
-			}
-			else
-			{
-				$dirname = $key;
-			}
-			
 			$this->recid++;
 			$this->records[] = array(
 				'recid' => $this->recid,
-				'filename' => '<span class="dir">' . $dirname . '</span>',
+				'filename' => '<span class="dir">' . $key . '</span>',
 				//'filename' => "<span class='dir'><img src='{$this->config->item( 'base_url' )}index.php/resource/png/images/folder'>{$key}</span>",
 				//'filename' => "<span class='dir'><a href='{$this->config->item( 'base_url' )}index.php/filemgr/index/dir/{$key}'>{$key}</a></span>",
 				'size' => '',
@@ -221,23 +191,10 @@ class Index extends CI_Controller {
 		}
 		foreach ( $this->file_list as $key => $val )
 		{
-			$convert_type = $this->config->item( 'convert_filename' , 'filemgr' );
-			if ( $convert_type === 1 )
-			{
-				$filename = utf8_decode( $key );
-			}
-			else if ( $convert_type === 2 )
-			{
-				$filename = mb_convert_encoding( $key , 'UTF-8' , mb_detect_encoding( $key , $this->encodings ) );
-			}
-			else
-			{
-				$filename = $key;
-			}
 			$this->recid++;
 			$this->records[] = array(
 				'recid' => $this->recid,
-				'filename' => '<span class="file">' . $filename . '</span>',
+				'filename' => '<span class="file">' . $key . '</span>',
 				//'filename' => "<span class='file'><img src='{$this->config->item( 'base_url' )}index.php/resource/png/images/fileicon'>{$key}</span>",
 				'size' => $val['size'],
 				'type' => 'File',

@@ -13,19 +13,16 @@ $config['php_dir'] = 'legacy/files';
 $config['project_dir'] = 'legacy/projects';
 
 /*
-	whether to deal with filename while doing opeartion save or view
-	0:do not convert
-	1:utf8_encode utf8_decode
-	2:mb_convert_encoding
+	determine if convert encoding while process with file path
 */
-$config['convert_filename'] = 2;
+$config['convert_path'] = true;
 
 /*
-	method to specify file on disk according to file name in utf-8
-	0:do not convert
-	1:list all files and convert them to utf-8 to compare      --prefered
-	2:get encoding by randomly select a filename and transfer utf-8 filename
-	3:use my_find_path to get file path
-	!deprecated
+	the encoding of disk file
 */
-$config['find_method'] = 3;
+$config['encode_native'] = 'CP936';
+
+/*
+	the encoding used in php script
+*/
+$config['encode_web'] = 'UTF-8';
