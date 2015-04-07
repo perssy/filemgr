@@ -39,6 +39,8 @@ function modify(recid , type)
 						break;
 					case 'save':
 						break;
+					case 'view':
+						break;
 					case 'exec':
 						var res = JSON.parse( data );
 						if ( res.code == 200 )
@@ -47,6 +49,8 @@ function modify(recid , type)
 							w2popup.open({
 								title : filename,
 								//url : res.url,//invalid in open method
+								width : 700,
+								height : 500,
 								body : '<div id="res"></div>'+
 									'<script type="type/javascript">$("#res").load("'+res.url+'");<\/script>',
 								buttons : '<button class="btn" onclick="window.open(\''+res.url+'\',\'_blank\')">Open in new tab</button>'+

@@ -9,6 +9,7 @@ class Del extends CI_Controller {
 	private $file_list = array();
 	private $ret_arr = array();
 	private $ret_json = '';
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -16,7 +17,7 @@ class Del extends CI_Controller {
 		$this->post_data = addslashes( trim( file_get_contents( 'php://input' ) ) );
 		if ( $this->post_data === '' )
 		{
-			exit;
+			return;
 		}
 		
 		$this->config->load( 'filemgr' , true );
@@ -92,6 +93,6 @@ class Del extends CI_Controller {
 		$this->ret_json = json_encode( $this->ret_arr );
 		
 		echo $this->ret_json;
-		exit;
+		return;
 	}
 }

@@ -1,2 +1,3 @@
 phpunit/
 findpath.log
+application/filemgr/legacy/*

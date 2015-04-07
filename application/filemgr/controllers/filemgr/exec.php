@@ -3,6 +3,11 @@ if ( ! defined( 'BASEPATH' ) ) exit( 'No direct script access allowed' );
 
 class Exec extends CI_Controller {
 	
+	private $post_data = '';
+	private $file_path = '';
+	private $ret_arr = array();
+	private $ret_json = '';
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -11,7 +16,7 @@ class Exec extends CI_Controller {
 		
 		if ( $this->post_data === '' )
 		{
-			exit;
+			return;
 		}
 		
 		$this->config->load( 'filemgr' , true );
@@ -35,8 +40,6 @@ class Exec extends CI_Controller {
 					if( file_exists( $this->file_path ) )
 					{
 						try{
-							/*unlink( $this->file_path );
-							$this->ret_arr = array( 'msg' => 'Delete successfully!' , 'code' => 200 );*/
 							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'url' => $this->config->item( 'base_url' ) . $this->file_path);
 						}catch(Exception $e)
 						{
@@ -66,6 +69,6 @@ class Exec extends CI_Controller {
 		$this->ret_json = json_encode( $this->ret_arr );
 		
 		echo $this->ret_json;
-		exit;
+		return;
 	}
 }
