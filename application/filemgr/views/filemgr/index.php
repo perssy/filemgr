@@ -50,12 +50,13 @@ function modify(recid , type)
 								title : filename,
 								width : 900,
 								height : 600,
-								body : '<pre>' + res.content + '</pre>',
+								body : '<pre class=\'brush:php\'>' + res.content + '</pre>',
 								buttons : '<button class="btn" onclick="w2popup.close();">Close</button>',
 							});
 							/*var contents = w2utils.base64decode(res.content);
 							alert(contents);
 							$('#file_content').html(contents);*/
+							SyntaxHighlighter.highlight();
 						}
 						else
 						{
@@ -127,6 +128,7 @@ w2ui.grid.on( 'delete' , function(event) {
 		}
 	}
 });
+
 w2ui.grid.toolbar.on( 'click' , function(event) {
 	//console.log(event.target);
 	event.preventDefault();
@@ -152,12 +154,12 @@ w2ui.grid.toolbar.on( 'click' , function(event) {
 	}
 });
 
-
 $( '.dir' ).click(function(e){
 	var url = '<?php echo $this->config->item( 'base_url' );?>index.php/filemgr/index/explore/<?php echo $curr_dir;?>'+$(this).html();
 	window.location.href = url;
 	//window.location.replace(url);
 });
+
 $( '.file' ).click(function(e){
 	var recid = $(this).parent().parent().parent().attr('recid');
 	w2ui.grid.selectNone();

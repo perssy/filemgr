@@ -1,3 +1,7 @@
 phpunit/
 findpath.log
 application/filemgr/legacy/*
+application/filemgr/libraries/externals/syntaxhighlighter/*
+!application/filemgr/libraries/externals/syntaxhighlighter/scripts
+!application/filemgr/libraries/externals/syntaxhighlighter/styles
+application/filemgr/libraries/externals/hyperlight

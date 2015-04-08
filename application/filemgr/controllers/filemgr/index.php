@@ -145,8 +145,8 @@ class Index extends CI_Controller {
 				'toolbar' => true,
 				'footer' => true,
 				'lineNumbers' => true,
-				'toolbarAdd' => true,
-				'toolbarDelete' => true,
+				//'toolbarAdd' => true,
+				//'toolbarDelete' => true,
 				'toolbarEdit' => true,
 			),
 			'toolbar' => array(
