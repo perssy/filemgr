@@ -413,8 +413,11 @@ input[type=checkbox].w2ui-toggle:focus {
 .w2ui-icon.icon-back {
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABnRSTlMA/wD/AP83WBt9AAAA7klEQVQokbWSvYmHQBTEx0sVhMXUxQIMrEE2togtwsAKlkW2BxMLECPDLUCsQSzAQBeN9gLvS88T/sFN+n7Dmzc8x1qLV/T2En01rOtaVdW+708O+yljTJqmhBBjjP1b+KIZY4SQvu8f6A/DQQdBMAzDM22tdbZty7Ks67qiKOI4/pnW87wkScIwPN0wjuNzLZTStm1PkZRSAJRSl+3LsmitOecA8jw/HV2WJQAp5W3uuq4BHHu+a5VSAhBC3Ho455TSk8FaK4QAMM/zb4PWGsA0TbgMbunjHgBN01x/yff9265c12WMRVHk2P/+1neryWXPsk56SwAAAABJRU5ErkJggg==) no-repeat center !important;
 }
-.w2ui-icon.icon-view {
+.w2ui-icon.icon-exec {
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABnRSTlMA/wD/AP83WBt9AAABRklEQVQokZWSMaoCQQyGY3YIiyAsiwxbWVnLsuBgoRcR8QyewGLBW1jrLWy00juIYCsWVhJnM6+YpziLj4d/+U++/EOShnMOvhF+VR0Aj8djsVicz2cAqKqqqqrPhHtTt9tNkmS5XDKzc85aa611oQKg1+v5LsaYzWbjzRoTAHmeE1G73VZKKaUmk8nxeKxFBYAxptlsaq2zLNNaI2KapmVZ3m63FxZMCRGJiIgQERGzLBOR+XxeFMV6vY6iKIqiAPA/oacAgIjSND2dTuPxeDQaHQ4HVUvwgIhYa0UEAEQkjmNm3u12xpjPi0Os+y+n/uB7M7OI+AREZOb7/T4cDvf7fQD4OfBTAMDM1+u10+msVqvtdtvv91UNeJWKyOVySZKkLMvZbNZqtX6P5X0PRVHEcay19lOaTqf/LC7Pcx81GAz+Oo0f4mFC9aChHhcAAAAASUVORK5CYII=) no-repeat center !important;
+}
+.w2ui-icon.icon-view {
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABnRSTlMA/wD/AP83WBt9AAAAu0lEQVQoke2SMQqEMBBFP4uksPA0HsN60LR6DtFgL6QTJKXeQDyCh0kRvMBsIbhZA7oH2FcO8/+fgQ9mttbmeS6EQEBd1/xNBMAYsyyL1jpJknN12zattVIKQNu2Hw9mJiIiujhN0wRgHMdLThSe4VOWJYCqqs6c171gnuc4jrMsU0r1fQ/gIUFK6X91l1AUhf8SER3zh5NC/oJfiACkadp13TAMfvl89n1f17VpGgC4r/eBEEJK6Zxj5jdR/HpRLzMgEgAAAABJRU5ErkJggg==) no-repeat center !important;
 }
 /*************************************************
 * ---- Locking portion of the screen (in grid, form, layout)

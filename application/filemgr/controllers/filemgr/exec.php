@@ -41,7 +41,7 @@ class Exec extends CI_Controller {
 					{
 						try{
 							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'url' => $this->config->item( 'base_url' ) . $this->file_path);
-						}catch(Exception $e)
+						}catch( Exception $e )
 						{
 							$this->ret_arr = array( 'msg' => $e , 'code' => 500 );
 						}

@@ -1,12 +1,12 @@
 <?php 
-if ( ! defined( 'BASEPATH' )) exit( 'No direct script access allowed' );
+if ( ! defined( 'BASEPATH' ) ) exit( 'No direct script access allowed' );
 
-class Del extends CI_Controller {
+class View extends CI_Controller {
 	
 	private $post_data = '';
-	private $path_info = array();
 	private $file_path = '';
-	private $file_list = array();
+	private $file_content = '';
+	private $file_output = '';
 	private $ret_arr = array();
 	private $ret_json = '';
 	
@@ -15,6 +15,7 @@ class Del extends CI_Controller {
 		parent::__construct();
 		
 		$this->post_data = addslashes( trim( file_get_contents( 'php://input' ) ) );
+		
 		if ( $this->post_data === '' )
 		{
 			return;
@@ -23,7 +24,7 @@ class Del extends CI_Controller {
 		$this->config->load( 'filemgr' , true );
 	}
 	
-	public function index()//cannot deal with filename containing utf-8 characters
+	public function Index()
 	{
 		if ( $this->post_data !== '' )
 		{
@@ -41,9 +42,14 @@ class Del extends CI_Controller {
 					if( file_exists( $this->file_path ) )
 					{
 						try{
-							/*unlink( $this->file_path );
-							$this->ret_arr = array( 'msg' => 'Delete successfully!' , 'code' => 200 );*/
-							$this->ret_arr = array( 'msg' => "Delete action not allowed!" , 'code' => 200 );
+							$this->file_content = @file_get_contents( $this->file_path );
+							ob_start();
+							print_r( $this->file_content );
+							$this->file_output = ob_get_clean();
+							$this->file_output = str_replace( "\xEF\xBB\xBF" , '' , $this->file_output );//remove BOM
+							//$bom = pack('H*', 'EFBBBF');
+							//$this->file_output = preg_replace("/^$bom/",'',$this->file_output);
+							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'content' => htmlentities( $this->file_output ) );
 						}catch( Exception $e )
 						{
 							$this->ret_arr = array( 'msg' => $e , 'code' => 500 );
@@ -56,33 +62,12 @@ class Del extends CI_Controller {
 				}
 				else
 				{
-					$this->file_list = scandir( $this->file_path );
-					
-					if ( version_compare( phpversion() , '5.4.0' , '>=' ) )
-					{
-						$this->file_list = array_diff( $this->file_list , [ '.' , '..' ] );
-					}
-					else
-					{
-						$this->file_list = array_diff( $this->file_list , array( '.' , '..' ) );
-					}
-					
-					//if ( count( $this->file_list )  <= 2 && $this->file_list[0] == '.'  && $this->file_list[1] == '..' )
-					if ( empty( $this->file_list ) )
-					{
-						/*rmdir( $this->file_path );
-						$this->ret_arr = array( 'msg' => 'Delete successfully!' , 'code' => 200 );*/
-						$this->ret_arr = array( 'msg' => 'Folders cannot be deleted!' , 'code' => 500 );
-					}
-					else
-					{
-						$this->ret_arr = array( 'msg' => 'Folder is not empty!' , 'code' => 500 );
-					}
+					$this->ret_arr = array( 'msg' => 'Folder cannot be executed!' , 'code' => 500 );
 				}
 			}
 			else
 			{
-				$this->ret_arr = array( 'msg' => 'Parent folder cannot be deleted!' , 'code' => 500 );
+				$this->ret_arr = array( 'msg' => 'Parent folder cannot be executed!' , 'code' => 500 );
 			}
 		}
 		else

@@ -12,6 +12,7 @@
 .file {
 	background:url("<?php echo $this->config->item( 'base_url' );?>index.php/resource/png/images/fileicon") no-repeat;
 	padding: 0 0 0 20px;
+	cursor:pointer;
 }
 </style>
 <div id="grid" style="width:100%;height:600px;">
@@ -40,6 +41,26 @@ function modify(recid , type)
 					case 'save':
 						break;
 					case 'view':
+						//w2alert(escape(data));
+						//alert((data));
+						var res = JSON.parse( data );
+						if ( res.code == 200 )
+						{
+							w2popup.open({
+								title : filename,
+								width : 900,
+								height : 600,
+								body : '<pre>' + res.content + '</pre>',
+								buttons : '<button class="btn" onclick="w2popup.close();">Close</button>',
+							});
+							/*var contents = w2utils.base64decode(res.content);
+							alert(contents);
+							$('#file_content').html(contents);*/
+						}
+						else
+						{
+							w2alert( res.msg , 'Warning' );
+						}
 						break;
 					case 'exec':
 						var res = JSON.parse( data );
@@ -109,16 +130,20 @@ w2ui.grid.on( 'delete' , function(event) {
 w2ui.grid.toolbar.on( 'click' , function(event) {
 	//console.log(event.target);
 	event.preventDefault();
+	console.log(event);
 	var selected = w2ui.grid.getSelection();
 	var length = selected.length;
 	if ( length != 1 )
 	{
 		return;
 	}
-	switch(event.target)
+	switch( event.target )
 	{
 		case 'exebtn' : 
 			modify( selected[0] , 'exec' );
+			break;
+		case 'viewbtn' :
+			modify( selected[0] , 'view' );
 			break;
 		case 'parentbtn' :
 			//window.location.href = "<?php echo $this->config->item( ' base_url' );?>";
@@ -132,6 +157,12 @@ $( '.dir' ).click(function(e){
 	var url = '<?php echo $this->config->item( 'base_url' );?>index.php/filemgr/index/explore/<?php echo $curr_dir;?>'+$(this).html();
 	window.location.href = url;
 	//window.location.replace(url);
+});
+$( '.file' ).click(function(e){
+	var recid = $(this).parent().parent().parent().attr('recid');
+	w2ui.grid.selectNone();
+	//w2ui.grid.select(recid);
+	modify( recid , 'view' );
 });
 </script>
 

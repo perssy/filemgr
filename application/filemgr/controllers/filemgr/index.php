@@ -154,7 +154,8 @@ class Index extends CI_Controller {
 				'items' => array(
 					array( 'type' => 'break'),
 					array( 'type' => 'button' , 'id' => 'parentbtn' , 'caption' => 'Parent' , 'img' => 'icon-back' , 'disabled' => !$this->hasParent),
-					array( 'type' => 'button' , 'id' => 'exebtn' , 'caption' => 'Execute' , 'img' => 'icon-view' ),
+					array( 'type' => 'button' , 'id' => 'exebtn' , 'caption' => 'Execute' , 'img' => 'icon-exec' ),
+					array( 'type' => 'button' , 'id' => 'viewbtn' , 'caption' => 'View' , 'img' => 'icon-view' ),
 					//array( 'type' => 'button' , 'id' => 'addbutton' , 'caption' => 'Add' , 'img' => 'icon-cross' ),
 					//array( 'type' => 'button' , 'id' => 'editbutton' , 'caption' => 'Edit' , 'img' => 'icon-pencil' ),
 				),
