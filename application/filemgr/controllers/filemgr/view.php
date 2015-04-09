@@ -7,6 +7,9 @@ class View extends CI_Controller {
 	private $file_path = '';
 	private $file_content = '';
 	private $file_output = '';
+	private $encoding = '';
+	private $encode_web = '';
+	private $encode_native = '';
 	private $ret_arr = array();
 	private $ret_json = '';
 	
@@ -42,14 +45,28 @@ class View extends CI_Controller {
 					if( file_exists( $this->file_path ) )
 					{
 						try{
-							$this->file_content = @file_get_contents( $this->file_path );
-							ob_start();
-							print_r( $this->file_content );
-							$this->file_output = ob_get_clean();
-							$this->file_output = str_replace( "\xEF\xBB\xBF" , '' , $this->file_output );//remove BOM
+							$this->file_content = file_get_contents( $this->file_path );
+							//ob_start();
+							//print_r( $this->file_content );
+							//$this->file_output = ob_get_clean();
+							//$this->file_output = $this->file_content;
+							
+							$this->file_output = str_replace( "\xEF\xBB\xBF" , '' , $this->file_content );//remove BOM
 							//$bom = pack('H*', 'EFBBBF');
 							//$this->file_output = preg_replace("/^$bom/",'',$this->file_output);
-							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'content' => htmlentities( $this->file_output ) );
+							
+							$this->encode_web = $this->config->item( 'encode_web' , 'filemgr' );
+							$this->encode_native = $this->config->item( 'encode_native' , 'filemgr' );
+							
+							$this->encoding = mb_detect_encoding( $this->file_output , array( $this->encode_web , $this->encode_native ) );
+							if ( $this->encoding != $this->encode_web )
+							{
+								$this->file_output = mb_convert_encoding( $this->file_output , $this->encode_web , $this->encoding );
+							}
+							
+							$this->file_output = htmlspecialchars( $this->file_output );
+							
+							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'content' => $this->file_output );
 						}catch( Exception $e )
 						{
 							$this->ret_arr = array( 'msg' => $e , 'code' => 500 );
@@ -62,7 +79,10 @@ class View extends CI_Controller {
 				}
 				else
 				{
-					$this->ret_arr = array( 'msg' => 'Folder cannot be executed!' , 'code' => 500 );
+					$this->ret_arr = array(
+						'url' => $this->config->item( 'base_url' ) . 'index.php/filemgr/index/explore/' . $this->post_data,
+						'code' => 301 
+					);
 				}
 			}
 			else

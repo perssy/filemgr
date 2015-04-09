@@ -64,6 +64,22 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
+$db['filemgr_mysql']['hostname'] = 'localhost';
+$db['filemgr_mysql']['username'] = 'root';
+$db['filemgr_mysql']['password'] = '';
+$db['filemgr_mysql']['database'] = 'filemgr';
+$db['filemgr_mysql']['dbdriver'] = 'mysql';
+$db['filemgr_mysql']['dbprefix'] = '';
+$db['filemgr_mysql']['pconnect'] = TRUE;
+$db['filemgr_mysql']['db_debug'] = TRUE;
+$db['filemgr_mysql']['cache_on'] = FALSE;
+$db['filemgr_mysql']['cachedir'] = '';
+$db['filemgr_mysql']['char_set'] = 'utf8';
+$db['filemgr_mysql']['dbcollat'] = 'utf8_general_ci';
+$db['filemgr_mysql']['swap_pre'] = '';
+$db['filemgr_mysql']['autoinit'] = TRUE;
+$db['filemgr_mysql']['stricton'] = FALSE;
+
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */

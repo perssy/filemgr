@@ -24,7 +24,7 @@ function modify(recid , type)
 	var selrec = w2ui.grid.get( recid );
 	if (selrec != null)
 	{
-		var filename = jQuery(selrec.filename).text();
+		var filename = jQuery( selrec.filename ).text();
 		var mod_url = '<?php echo $this->config->item( 'base_url' );?>index.php/filemgr/' + type;
 		//var filename = selrec.filename.replace(/<(?:.|\n)*?>/gm, '');//also effect
 		$.ajax({
@@ -41,8 +41,6 @@ function modify(recid , type)
 					case 'save':
 						break;
 					case 'view':
-						//w2alert(escape(data));
-						//alert((data));
 						var res = JSON.parse( data );
 						if ( res.code == 200 )
 						{
@@ -53,10 +51,11 @@ function modify(recid , type)
 								body : '<pre class=\'brush:php\'>' + res.content + '</pre>',
 								buttons : '<button class="btn" onclick="w2popup.close();">Close</button>',
 							});
-							/*var contents = w2utils.base64decode(res.content);
-							alert(contents);
-							$('#file_content').html(contents);*/
 							SyntaxHighlighter.highlight();
+						}
+						else if ( res.code == 301 )
+						{
+							location.href = res.url;
 						}
 						else
 						{
@@ -67,7 +66,6 @@ function modify(recid , type)
 						var res = JSON.parse( data );
 						if ( res.code == 200 )
 						{
-							//console.log(res);
 							w2popup.open({
 								title : filename,
 								//url : res.url,//invalid in open method
@@ -102,7 +100,6 @@ function modify(recid , type)
 						}
 						break;
 				}
-				//w2alert( 'success' , 'Warning' );
 			} ,
 			error : function(){
 				w2alert( 'Failed to connect!' , 'Error' );
@@ -130,9 +127,8 @@ w2ui.grid.on( 'delete' , function(event) {
 });
 
 w2ui.grid.toolbar.on( 'click' , function(event) {
-	//console.log(event.target);
 	event.preventDefault();
-	console.log(event);
+	//console.log(event);
 	var selected = w2ui.grid.getSelection();
 	var length = selected.length;
 	if ( length != 1 )
@@ -148,7 +144,6 @@ w2ui.grid.toolbar.on( 'click' , function(event) {
 			modify( selected[0] , 'view' );
 			break;
 		case 'parentbtn' :
-			//window.location.href = "<?php echo $this->config->item( ' base_url' );?>";
 			$( '#parentlink' ).trigger( 'click' );
 			break;
 	}
@@ -157,7 +152,6 @@ w2ui.grid.toolbar.on( 'click' , function(event) {
 $( '.dir' ).click(function(e){
 	var url = '<?php echo $this->config->item( 'base_url' );?>index.php/filemgr/index/explore/<?php echo $curr_dir;?>'+$(this).html();
 	window.location.href = url;
-	//window.location.replace(url);
 });
 
 $( '.file' ).click(function(e){

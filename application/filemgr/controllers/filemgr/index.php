@@ -20,7 +20,7 @@ class Index extends CI_Controller {
 		array( 'field' => 'recid' , 'caption' => 'No.' , 'size' => '40px' , 'sortable' => true , 'attr' => 'align=center' , 'hidden' => true ),
 		array( 'field' => 'filename' , 'caption' => 'Filename' , 'size' => '20%' , 'sortable' => true ),
 		array( 'field' => 'type' , 'caption' => 'FileType' , 'size' => '15%' , 'sortable' => true ),
-		array( 'field' => 'size' , 'caption' => 'FileSize' , 'size' => '20%' , 'sortable' => true ),
+		array( 'field' => 'size' , 'caption' => 'FileSize' , 'size' => '20%' , 'sortable' => false ),
 		array( 'field' => 'modifytime' , 'caption' => 'ModifyTime' , 'size' => '20%' , 'sortable' => false ),
 		//array( 'field' => 'operation' , 'caption' => 'Operation' , 'size' => '250px' , 'sortable' => false ),
 	);
@@ -146,8 +146,8 @@ class Index extends CI_Controller {
 				'footer' => true,
 				'lineNumbers' => true,
 				//'toolbarAdd' => true,
-				//'toolbarDelete' => true,
-				'toolbarEdit' => true,
+				'toolbarDelete' => true,
+				//'toolbarEdit' => true,
 			),
 			'toolbar' => array(
 				'name' => 'operations',
