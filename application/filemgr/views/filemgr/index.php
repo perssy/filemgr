@@ -64,6 +64,8 @@ function modify(recid , type)
 						break;
 					case 'exec':
 						var res = JSON.parse( data );
+						var fileurl = res.url;
+						fileurl = fileurl.replace('\/', '/');
 						if ( res.code == 200 )
 						{
 							w2popup.open({
@@ -72,8 +74,8 @@ function modify(recid , type)
 								width : 700,
 								height : 500,
 								body : '<div id="res"></div>'+
-									'<script type="type/javascript">$("#res").load("'+res.url+'");<\/script>',
-								buttons : '<button class="btn" onclick="window.open(\''+res.url+'\',\'_blank\')">Open in new tab</button>'+
+									'<script type="type/javascript">$("#res").load("' + fileurl + '");<\/script>',
+								buttons : '<button class="btn" onclick="window.open(\'' + fileurl + '\',\'_blank\')">Open in new tab</button>'+
 									'<button class="btn" onclick="w2popup.close();">Close</button>',
 							});
 							//w2popup.load({url:res.url});//nothing displayed

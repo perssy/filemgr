@@ -5,6 +5,7 @@ class Exec extends CI_Controller {
 	
 	private $post_data = '';
 	private $file_path = '';
+	private $ret_path = '';
 	private $ret_arr = array();
 	private $ret_json = '';
 	
@@ -30,6 +31,8 @@ class Exec extends CI_Controller {
 			{
 				$this->file_path = APPPATH . $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->post_data;
 				
+				$this->file_path = str_replace( "\\" , '/' ,$this->file_path );
+				
 				if ( $this->config->item( 'convert_path' , 'filemgr' ) === true )
 				{
 					$this->file_path = mb_convert_encoding( $this->file_path , $this->config->item( 'encode_native' , 'filemgr' ) , $this->config->item( 'encode_web' , 'filemgr' ) );
@@ -40,7 +43,9 @@ class Exec extends CI_Controller {
 					if( file_exists( $this->file_path ) )
 					{
 						try{
-							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'url' => $this->config->item( 'base_url' ) . $this->file_path);
+							$this->ret_path = str_replace( str_replace( "\\" , '/' , FCPATH ) , str_replace( "\\" , '/' , $this->config->item( 'base_url' ) ) , $this->file_path );
+							//$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'url' => /*$this->config->item( 'base_url' ) .*/ $this->file_path);
+							$this->ret_arr = array( 'msg' => "Success" , 'code' => 200 , 'url' => $this->ret_path );
 						}catch( Exception $e )
 						{
 							$this->ret_arr = array( 'msg' => $e , 'code' => 500 );
