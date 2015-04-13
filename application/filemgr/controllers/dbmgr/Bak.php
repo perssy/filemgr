@@ -13,7 +13,6 @@ class Bak extends CI_Controller {
 		$this->config->load( 'filemgr' , true );
 		$this->config->load( 'dbmgr' , true );
 		
-		//$this->load->database( 'filemgr_mysql' );
 		$this->load->helper( 'directory' );
 		
 		$this->db_conn = $this->load->database( 'filemgr_mysql' , true );
@@ -74,7 +73,7 @@ class Bak extends CI_Controller {
 				foreach( $file_list as $val )
 				{
 					$file_path = APPPATH . $path . '/' . trim( $val );
-					//var_dump($val);
+					
 					if ( $val === '' || $val === '.' || $val === '..' )
 					{
 						continue;
@@ -109,7 +108,6 @@ class Bak extends CI_Controller {
 				$modifytime = filemtime( APPPATH . $path . '/' . $filename );
 				if ( $this->config->item( 'convert_path' , 'filemgr' ) === true )
 				{
-					//$content = mb_convert_encoding( $content  , $this->config->item( 'encode_web' , 'filemgr' ) , $this->config->item( 'encode_native' , 'filemgr' ) );
 					$filename = mb_convert_encoding( $filename  , $this->config->item( 'encode_web' , 'filemgr' ) , $this->config->item( 'encode_native' , 'filemgr' ) );
 					$path = mb_convert_encoding( $path  , $this->config->item( 'encode_web' , 'filemgr' ) , $this->config->item( 'encode_native' , 'filemgr' ) );
 				}
