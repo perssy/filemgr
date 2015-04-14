@@ -7,6 +7,10 @@ class Index extends CI_Controller {
 	private $curr_dir = '';
 	private $real_path = '';
 	private $full_path = '';
+	private $curr_path = '';
+	private $file_query;
+	private $dir_query;
+	private $temp_path = '';
 	private $temp_file = '';
 	private $hasParent = false;
 	private $file_list = array();
@@ -35,11 +39,12 @@ class Index extends CI_Controller {
 		parent::__construct();
 		
 		$this->config->load( 'filemgr' , true );
-		$this->db_conn = $this->load->database( 'filemgr_mysql' , true );
+		
 	}
 	
 	public function explore()
 	{
+		
 		/*validate php files dir*/
 		if ( $this->config->item( 'php_dir' , 'filemgr' ) !== '')
 		{
@@ -57,33 +62,35 @@ class Index extends CI_Controller {
 			show_error( 'Invalid directory config for PHP files!' );
 		}
 		
-		$file_query = $this->db_conn->select( 'path, filename, type, length(content) as size, updatetime as modifytime' )
-												->from( 'files' )
-												->where( 'path' , $this->file_path )
-												->get();
-	
-		$file_list = $file_query->result_array();
+		$this->db_conn = $this->load->database( 'filemgr_mysql' , true );
 		
-		if ( empty( $file_list ) || !is_array( $file_list ) )
+		$this->file_query = $this->db_conn->select( 'path, filename, type, length(content) as size, updatetime as modifytime' )
+													->from( 'files' )
+													->where( 'path' , $this->file_path )
+													->get();
+	
+		$this->file_list = $this->file_query->result_array();
+		
+		if ( empty( $this->file_list ) || !is_array( $this->file_list ) )
 		{
 			show_error( 'No file found on this directory!' );
 		}
 		
-		$curr_path = $this->config->item( 'php_dir' , 'filemgr' ) . $this->curr_dir . '/';
-		$dir_query = $this->db_conn->distinct()
+		$this->curr_path = $this->config->item( 'php_dir' , 'filemgr' ) . $this->curr_dir . '/';
+		$this->dir_query = $this->db_conn->distinct()
 														->select( 'path' )
 														->from( 'files' )
-														->like( 'path' , $curr_path )
+														->like( 'path' , $this->curr_path )
 														->get();
-		$this->path_list = $dir_query->result_array();
+		$this->path_list = $this->dir_query->result_array();
 		foreach( $this->path_list as $val )
 		{
-			if ( strpos( $val['path'] , $curr_path ) !== false )
+			if ( strpos( $val['path'] , $this->curr_path ) !== false )
 			{
-				$path = str_replace( $curr_path , '' , $val['path'] );
-				if ( strstr( $path , '/' ) === false && strstr( $path , "\\" ) === false )
+				$this->temp_path = str_replace( $this->curr_path , '' , $val['path'] );
+				if ( strstr( $this->temp_path , '/' ) === false && strstr( $this->temp_path , "\\" ) === false )
 				{
-					$dir_list[$path] = array();
+					$this->dir_list[$this->temp_path] = array();
 				}
 			}
 		}
@@ -129,7 +136,7 @@ class Index extends CI_Controller {
 			'records' => array(),
 		);
 	
-		foreach ( $dir_list as $key => $val )
+		foreach ( $this->dir_list as $key => $val )
 		{
 			$this->recid++;
 			$this->records[] = array(
@@ -140,7 +147,7 @@ class Index extends CI_Controller {
 				'modifytime' => '',
 			);
 		}
-		foreach ( $file_list as $key => $val )
+		foreach ( $this->file_list as $key => $val )
 		{
 			$this->recid++;
 			if ( $val['size'] > 1024 )
