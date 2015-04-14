@@ -44,18 +44,17 @@ class Index extends CI_Controller {
 	
 	public function explore()
 	{
-		
 		/*validate php files dir*/
 		if ( $this->config->item( 'php_dir' , 'filemgr' ) !== '')
 		{
 			$this->curr_dir = urldecode( implode( '/' , func_get_args() ) );
 			
+			$this->file_path = $this->config->item( 'php_dir' , 'filemgr' ) . '/' . $this->curr_dir;
+			
 			if ( $this->curr_dir !== '' )
 			{
-				$this->curr_dir = '/' . $this->curr_dir;
+				$this->curr_dir .= '/';
 			}
-			
-			$this->file_path = $this->config->item( 'php_dir' , 'filemgr' ) . $this->curr_dir;
 		}
 		else
 		{
@@ -69,30 +68,25 @@ class Index extends CI_Controller {
 													->where( 'path' , $this->file_path )
 													->get();
 	
-		$this->file_list = $this->file_query->result_array();
-		
-		if ( empty( $this->file_list ) || !is_array( $this->file_list ) )
+		if ( $this->file_query->num_rows() > 0 )
 		{
-			show_error( 'No file found on this directory!' );
-		}
-		
-		$this->curr_path = $this->config->item( 'php_dir' , 'filemgr' ) . $this->curr_dir . '/';
-		$this->dir_query = $this->db_conn->distinct()
-														->select( 'path' )
-														->from( 'files' )
-														->like( 'path' , $this->curr_path )
-														->get();
-		$this->path_list = $this->dir_query->result_array();
-		foreach( $this->path_list as $val )
-		{
-			if ( strpos( $val['path'] , $this->curr_path ) !== false )
+			foreach( $this->file_query->result_array() as $val )
 			{
-				$this->temp_path = str_replace( $this->curr_path , '' , $val['path'] );
-				if ( strstr( $this->temp_path , '/' ) === false && strstr( $this->temp_path , "\\" ) === false )
+				if ( $val['type'] == 1 )
 				{
-					$this->dir_list[$this->temp_path] = array();
+					$this->file_list[] = $val;
+				}
+				else if ( $val['type'] == 0 )
+				{
+					$this->dir_list[] = $val;
 				}
 			}
+		}
+		else
+		{
+			$this->dir_list = array();
+			$this->file_list = array();
+			//show_error( 'No file found on this directory!' );
 		}
 		
 		if ( $this->curr_dir !== '' )//if current folder has parent folder
@@ -141,7 +135,7 @@ class Index extends CI_Controller {
 			$this->recid++;
 			$this->records[] = array(
 				'recid' => $this->recid,
-				'filename' => '<span class="dir">' . $key . '</span>',
+				'filename' => '<span class="dir">' . $val['filename'] . '</span>',
 				'size' => '',
 				'type' => 'Dir',
 				'modifytime' => '',

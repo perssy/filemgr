@@ -52,8 +52,9 @@ class Bak extends CI_Controller {
 		else if ( $this->walk_type === 3 )
 		{
 			$php_dir = $this->config->item( 'php_dir' , 'filemgr' );
-			$dir_stack = array();
-			$dir_map = array();
+			$dir_stack = array();//stack for traversal
+			$dir_map = array();//result array of all files in the folder
+			$dir_arr = array();//result array of all folders
 			if ( $this->config->item( 'convert_path' , 'filemgr' ) === true )
 			{
 				$php_dir = mb_convert_encoding( $php_dir  , $this->config->item( 'encode_native' , 'filemgr' ) , $this->config->item( 'encode_web' , 'filemgr' ) );
@@ -81,6 +82,8 @@ class Bak extends CI_Controller {
 					if ( is_dir( $file_path ) )
 					{
 						array_push( $dir_stack , $path . '/' . $val );
+						$res = $path . '/' . $val;
+						$dir_arr[] = $res;
 						continue;
 					}
 					if ( is_file( $file_path ) )
@@ -93,7 +96,8 @@ class Bak extends CI_Controller {
 			}
 		}
 		
-		$sql = 'SELECT  id, path, filename FROM f_files WHERE path= ? AND filename= ?';
+		$sql = 'SELECT  id, path, filename FROM f_files WHERE path= ? AND filename= ? AND type= ?';
+		
 		foreach( $dir_map as $val )
 		{
 			$full_path = str_replace( "\\" , '/' , $val );
@@ -101,8 +105,8 @@ class Bak extends CI_Controller {
 			$path = substr( $full_path , 0 , $pos );
 			$filename = substr( $full_path , $pos+1 );
 			
-			$query = $this->db_conn->query( $sql , array( $path , $filename ) );
-			if ( $query->num_rows() <= 0 )
+			$file_query = $this->db_conn->query( $sql , array( $path , $filename , 1 ) );
+			if ( $file_query->num_rows() <= 0 )
 			{
 				$content = file_get_contents( APPPATH . $path . '/' . $filename );
 				$modifytime = filemtime( APPPATH . $path . '/' . $filename );
@@ -118,6 +122,32 @@ class Bak extends CI_Controller {
 					'content' => $content,
 					'encode' => $this->config->item( 'encode_native' , 'filemgr' ),
 					'updatetime' => gmdate( 'Y-m-d H:i:s' , $modifytime ),
+				);
+				$this->db_conn->insert( 'files' , $newrecord );
+			}
+		}
+		
+		foreach( $dir_arr as $val )
+		{
+			$full_path = str_replace( "\\" , '/' , $val );
+			$pos = strrpos( $full_path , '/' );
+			$path = substr( $full_path , 0 , $pos );
+			$filename = substr( $full_path , $pos+1 );
+			
+			$dir_query = $this->db_conn->query( $sql , array( $path , $filename , 0 ) );
+			if ( $dir_query->num_rows() <= 0 )
+			{
+				if ( $this->config->item( 'convert_path' , 'filemgr' ) === true )
+				{
+					$filename = mb_convert_encoding( $filename  , $this->config->item( 'encode_web' , 'filemgr' ) , $this->config->item( 'encode_native' , 'filemgr' ) );
+					$path = mb_convert_encoding( $path  , $this->config->item( 'encode_web' , 'filemgr' ) , $this->config->item( 'encode_native' , 'filemgr' ) );
+				}
+				$newrecord = array(
+					'type' => 0,
+					'path' => $path,
+					'filename' => $filename,
+					'content' => '',
+					'encode' => '',
 				);
 				$this->db_conn->insert( 'files' , $newrecord );
 			}

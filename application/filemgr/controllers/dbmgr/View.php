@@ -36,7 +36,7 @@ class View extends CI_Controller {
 				
 				$this->pathinfo = pathinfo( $this->file_path );
 				
-				$this->file_query = $this->db_conn->select( 'content' )
+				$this->file_query = $this->db_conn->select( 'type, content' )
 																		->from( 'files' )
 																		->where( 'path' , $this->pathinfo['dirname'] )
 																		->where( 'filename' , $this->pathinfo['basename'] )
@@ -45,7 +45,17 @@ class View extends CI_Controller {
 				if ( $this->file_query->num_rows() > 0 )
 				{
 					$this->file_res = $this->file_query->row_array();
-					$this->ret_arr = array( 'msg' => 'Success' , 'code' => 200 , 'content' => $this->file_res['content'] );
+					if ( $this->file_res['type'] == 0 )
+					{
+						$this->ret_arr = array(
+							'url' => $this->config->item( 'base_url' ) . 'index.php/filemgr/index/explore/' . $this->post_data,
+							'code' => 301 
+						);
+					}
+					else
+					{
+						$this->ret_arr = array( 'msg' => 'Success' , 'code' => 200 , 'content' => $this->file_res['content'] );
+					}
 				}
 				else
 				{
