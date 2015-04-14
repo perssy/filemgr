@@ -25,7 +25,7 @@ function modify(recid , type)
 	if (selrec != null)
 	{
 		var filename = jQuery( selrec.filename ).text();
-		var mod_url = '<?php echo $this->config->item( 'base_url' );?>index.php/filemgr/' + type;
+		var mod_url = '<?php echo $curr_url;?>/' + type;
 		//var filename = selrec.filename.replace(/<(?:.|\n)*?>/gm, '');//also effect
 		$.ajax({
 			url : mod_url ,
@@ -152,7 +152,7 @@ w2ui.grid.toolbar.on( 'click' , function(event) {
 });
 
 $( '.dir' ).click(function(e){
-	var url = '<?php echo $this->config->item( 'base_url' );?>index.php/filemgr/index/explore/<?php echo $curr_dir;?>'+$(this).html();
+	var url = '<?php echo $curr_url;?>/index/explore/<?php echo $curr_dir;?>'+$(this).html();
 	window.location.href = url;
 });
 

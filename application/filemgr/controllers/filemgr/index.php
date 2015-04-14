@@ -217,7 +217,7 @@ class Index extends CI_Controller {
 		//var_dump(ENVIRONMENT);
 		//exit;
 		//$this->load->library( 'javascript' );
-		$this->load->view( 'filemgr/header' , array( 'title' => 'PHP manager  --  CodeIgniter ver 2.2.1' , 'grid_src' => $this->grid_src , 'curr_dir' => $this->curr_dir , 'environment' => ENVIRONMENT ) );
+		$this->load->view( 'filemgr/header' , array( 'title' => 'PHP manager  --  CodeIgniter ver 2.2.1' , 'grid_src' => $this->grid_src , 'curr_dir' => $this->curr_dir , 'environment' => ENVIRONMENT , 'curr_url' => $this->config->item( 'base_url' ) . $this->config->item( 'index_page' ) . '/filemgr' ) );
 		//$this->load->view( 'filemgr/leftmenu' );
 		$this->load->view( 'filemgr/index' , array( 'filelist' => $this->file_list ) );
 		//$this->load->view( 'filemgr/footer' );

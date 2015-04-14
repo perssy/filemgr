@@ -166,7 +166,7 @@ class Index extends CI_Controller {
 		$this->gridlist['records'] = $this->records;
 		
 		$this->grid_src = json_encode( $this->gridlist );
-		$this->load->view( 'filemgr/header' , array( 'title' => 'PHP manager  --  CodeIgniter ver 2.2.1' , 'grid_src' => $this->grid_src , 'curr_dir' => $this->curr_dir , 'environment' => ENVIRONMENT ) );
+		$this->load->view( 'filemgr/header' , array( 'title' => 'PHP manager  --  CodeIgniter ver 2.2.1' , 'grid_src' => $this->grid_src , 'curr_dir' => $this->curr_dir , 'environment' => ENVIRONMENT , 'curr_url' => $this->config->item( 'base_url' ) . $this->config->item( 'index_page' ) . '/dbmgr' ) );
 		$this->load->view( 'filemgr/index' , array( 'filelist' => $this->file_list ) );
 	}
 }
